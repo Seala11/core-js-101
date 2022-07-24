@@ -126,8 +126,14 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  const maxLeft = Math.max(rect1.left, rect2.left);
+  const minRight = Math.min(rect1.left + rect1.width, rect2.left + rect2.width);
+  const maxTop = Math.max(rect1.top, rect2.top);
+  const bottom = Math.min(rect1.top + rect1.height, rect2.top + rect2.height);
+  const cond1 = maxLeft < minRight;
+  const cond2 = maxTop < bottom;
+  return cond1 && cond2;
 }
 
 /**
@@ -280,8 +286,21 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const digits = ccn
+    .toString()
+    .split('')
+    .map((num) => +num);
+
+  const sum = digits
+    .map((digit, index) => {
+      if (digits.length % 2 === index % 2) return digit * 2;
+      return digit;
+    })
+    .map((digit) => (digit > 9 ? digit - 9 : digit))
+    .reduce((acc, digit) => acc + digit, 0);
+
+  return sum % 10 === 0;
 }
 
 /**
@@ -373,8 +392,8 @@ function isBracketsBalanced(str) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 /**
@@ -389,8 +408,20 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/*  pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const splitPath = (arr) => arr.map((path) => path.split('/'));
+
+  const filter = (path, acc) => {
+    const curr = path.filter((value, index) => acc[index] === value);
+    return curr;
+  };
+
+  const common = splitPath(pathes).reduce((acc, currPath) => {
+    const curr = filter(currPath, acc);
+    return curr;
+  });
+
+  return common.concat('').join('/');
 }
 
 /**
@@ -411,8 +442,18 @@ function getCommonDirectoryPath(/*  pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+
+  for (let i = 0; i < m1.length; i += 1) {
+    result[i] = [];
+    for (let j = 0; j < m2[0].length; j += 1) {
+      const sum = m1[i].reduce((acc, curr, k) => acc + curr * m2[k][j], 0);
+      result[i][j] = sum;
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -445,8 +486,25 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+
+function evaluateTicTacToePosition(position) {
+  const p = position;
+
+  for (let i = 0; i < p.length; i += 1) {
+    const row = p[i][0];
+    if (row && row === p[i][1] && row === p[i][2]) return row;
+
+    const col = p[0][i];
+    if (col && col === p[1][i] && col === p[2][i]) return col;
+  }
+
+  const diag1 = p[0][0];
+  if (diag1 && diag1 === p[1][1] && diag1 === p[2][2]) return diag1;
+
+  const diag2 = p[0][2];
+  if (diag2 && diag2 === p[1][1] && diag2 === p[2][0]) return diag2;
+
+  return undefined;
 }
 
 module.exports = {
